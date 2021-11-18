@@ -3,12 +3,40 @@ Pandas 学习笔记
 
 -  版本号： 0.3
 -  创建时间： 2015年02月07日 星期六 10:26:33 CST
--  修改时间： 2020年08月24日
+-  修改时间： 2021年11月18日
 -  数据来源：
 -  movies.csv http://boxofficemojo.com/daily/
 -  iris.csv https://github.com/dsaber/py-viz-blog
 -  titanic.csv https://github.com/dsaber/py-viz-blog
 -  ts.csv https://github.com/dsaber/py-viz-blog
+
+一些准备工作
+------------
+
+.. code:: ipython3
+
+    import numpy as np
+    import pandas as pd
+    from pandas import Series, DataFrame
+    import seaborn as sns
+    # 辅助函数
+    def get_movie_df():
+        """
+        获得 movie dataframe
+        """
+        return pd.read_csv('datas/movies.csv', sep='\t', encoding='utf-8',thousands=',',escapechar='$')
+    
+    def get_titanic_df():
+        return pd.read_csv('datas/titanic.csv')
+    
+    def get_iris_df():
+        return pd.read_csv('datas/iris.csv')
+    
+    def get_random_df():
+        return pd.DataFrame(
+            np.random.randn(6, 4),
+            index=pd.date_range('20200101', periods=6),
+            columns=list('ABCD'))
 
 安装使用
 --------
@@ -51,114 +79,12 @@ libjpeg8-dev, libfreetype6-dev
    。如果使用matplotlib内嵌进网页中,那么需要运行:``ipython notebook --matplotlib inline``
    ；或者在已经打开的 notebook 中运行 ``%matplotlib inline`` 命令。
 
-Pandas
-------
-
-.. code:: ipython3
-
-    import numpy as np
-    import pandas as pd
-    from pandas import Series, DataFrame
-    import seaborn as sns
-    # 辅助函数
-    def get_movie_df():
-        """
-        获得 movie dataframe
-        """
-        return pd.read_csv('datas/movies.csv', sep='\t', encoding='utf-8',thousands=',',escapechar='$')
-    
-    def get_titanic_df():
-        return pd.read_csv('datas/titanic.csv')
-    
-    def get_iris_df():
-        return pd.read_csv('datas/iris.csv')
-    
-    def get_random_df():
-        return pd.DataFrame(
-            np.random.randn(6, 4),
-            index=pd.date_range('20200101', periods=6),
-            columns=list('ABCD'))
-
 .. code:: ipython3
 
     # 查看 pandas 的版本
-    pd.__version__
-
-
-
-
-.. parsed-literal::
-
-    '1.3.4'
-
-
-
-.. code:: ipython3
-
+    # pd.__version__
     # 查看当前环境涉及软件的版本
-    pd.show_versions()
-
-
-.. parsed-literal::
-
-    
-    INSTALLED VERSIONS
-    ------------------
-    commit           : 945c9ed766a61c7d2c0a7cbb251b6edebf9cb7d5
-    python           : 3.7.10.final.0
-    python-bits      : 64
-    OS               : Linux
-    OS-release       : 5.4.0-42-generic
-    Version          : #46~18.04.1-Ubuntu SMP Fri Jul 10 07:21:24 UTC 2020
-    machine          : x86_64
-    processor        : x86_64
-    byteorder        : little
-    LC_ALL           : None
-    LANG             : zh_CN.UTF-8
-    LOCALE           : zh_CN.UTF-8
-    
-    pandas           : 1.3.4
-    numpy            : 1.21.2
-    pytz             : 2021.3
-    dateutil         : 2.8.2
-    pip              : 21.1.1
-    setuptools       : 58.0.4
-    Cython           : 0.29.24
-    pytest           : 6.2.3
-    hypothesis       : None
-    sphinx           : 4.2.0
-    blosc            : None
-    feather          : None
-    xlsxwriter       : 3.0.1
-    lxml.etree       : 4.6.3
-    html5lib         : 1.1
-    pymysql          : None
-    psycopg2         : None
-    jinja2           : 2.11.3
-    IPython          : 7.22.0
-    pandas_datareader: None
-    bs4              : 4.10.0
-    bottleneck       : 1.3.2
-    fsspec           : 2021.08.1
-    fastparquet      : None
-    gcsfs            : None
-    matplotlib       : 3.4.3
-    numexpr          : 2.7.3
-    odfpy            : None
-    openpyxl         : 3.0.9
-    pandas_gbq       : None
-    pyarrow          : None
-    pyxlsb           : None
-    s3fs             : None
-    scipy            : 1.7.1
-    sqlalchemy       : 1.4.22
-    tables           : 3.6.1
-    tabulate         : None
-    xarray           : None
-    xlrd             : 2.0.1
-    xlwt             : 1.3.0
-    numba            : 0.51.2
-
+    # pd.show_versions()
 
 DataFrame 速览
 --------------
@@ -569,6 +495,29 @@ frame2[column] 适用于任何列的名,但是 frame2.column 只有在列名是�
 
 
 
+DataFrame 的切片是 DataFrame 的视图，不是副本。对切片赋值会改变
+DataFrame 本身。
+
+.. code:: ipython3
+
+    c_month = frame2['month']
+    c_month
+
+
+
+
+.. parsed-literal::
+
+    one      0
+    two      1
+    three    2
+    four     3
+    five     4
+    six      5
+    Name: month, dtype: int64
+
+
+
 .. code:: ipython3
 
     month = Series([1,3,5], index=['one', 'three', 'five'])
@@ -653,63 +602,12 @@ frame2[column] 适用于任何列的名,但是 frame2.column 只有在列名是�
 
 
 
-DataFrame 的切片是 DataFrame 的视图，不是副本。对切片赋值会改变
-DataFrame 本身。
-
 .. code:: ipython3
 
-    c_month = frame2['month']
-
-.. code:: ipython3
-
-    c_month
-
-
-
-
-.. parsed-literal::
-
-    one      1.0
-    two      NaN
-    three    3.0
-    four     NaN
-    five     5.0
-    six      NaN
-    Name: month, dtype: float64
-
-
-
-.. code:: ipython3
-
-    c_month['two'] = 2.2
-    c_month
-
-
-.. parsed-literal::
-
-    /home/dormouse/anaconda3/lib/python3.7/site-packages/ipykernel_launcher.py:1: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      """Entry point for launching an IPython kernel.
-
-
-
-
-.. parsed-literal::
-
-    one      1.0
-    two      2.2
-    three    3.0
-    four     NaN
-    five     5.0
-    six      NaN
-    Name: month, dtype: float64
-
-
-
-.. code:: ipython3
-
+    # c_month['two'] = 2.2 
+    # 这种方式也能改写值，但是因为性能的问题不推荐使用，详见：
+    # https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+    frame2.loc['two', 'month'] = 2.2
     frame2
 
 
@@ -1159,45 +1057,45 @@ Frame reindex
       <tbody>
         <tr>
           <th>0</th>
-          <td>-0.226843</td>
-          <td>1.158647</td>
-          <td>-0.502618</td>
-          <td>-0.363415</td>
+          <td>-1.981692</td>
+          <td>0.431559</td>
+          <td>1.265458</td>
+          <td>-0.280410</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>-0.369415</td>
-          <td>0.087376</td>
-          <td>-0.273622</td>
-          <td>-1.187780</td>
+          <td>-1.467613</td>
+          <td>-0.863108</td>
+          <td>0.642762</td>
+          <td>0.090772</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>1.494696</td>
-          <td>0.733831</td>
-          <td>-0.175294</td>
-          <td>-0.066811</td>
+          <td>1.442440</td>
+          <td>-0.585124</td>
+          <td>-0.021404</td>
+          <td>-0.431891</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>-0.034685</td>
-          <td>-0.963611</td>
-          <td>0.816663</td>
-          <td>-1.962498</td>
+          <td>-0.894200</td>
+          <td>-0.772455</td>
+          <td>0.381860</td>
+          <td>-0.310073</td>
         </tr>
         <tr>
           <th>4</th>
-          <td>1.690612</td>
-          <td>0.871066</td>
-          <td>0.801409</td>
-          <td>-1.061566</td>
+          <td>-1.229319</td>
+          <td>0.992637</td>
+          <td>0.786276</td>
+          <td>-0.274459</td>
         </tr>
         <tr>
           <th>5</th>
-          <td>-0.210004</td>
-          <td>-0.969129</td>
-          <td>-1.239798</td>
-          <td>-1.063891</td>
+          <td>-0.974433</td>
+          <td>0.991664</td>
+          <td>1.016668</td>
+          <td>-0.086624</td>
         </tr>
       </tbody>
     </table>
@@ -1240,38 +1138,38 @@ Frame reindex
       <tbody>
         <tr>
           <th>5</th>
-          <td>-0.210004</td>
-          <td>-1.239798</td>
+          <td>-0.974433</td>
+          <td>1.016668</td>
           <td>NaN</td>
         </tr>
         <tr>
           <th>4</th>
-          <td>1.690612</td>
-          <td>0.801409</td>
+          <td>-1.229319</td>
+          <td>0.786276</td>
           <td>NaN</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>-0.034685</td>
-          <td>0.816663</td>
+          <td>-0.894200</td>
+          <td>0.381860</td>
           <td>NaN</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>1.494696</td>
-          <td>-0.175294</td>
+          <td>1.442440</td>
+          <td>-0.021404</td>
           <td>NaN</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>-0.369415</td>
-          <td>-0.273622</td>
+          <td>-1.467613</td>
+          <td>0.642762</td>
           <td>NaN</td>
         </tr>
         <tr>
           <th>0</th>
-          <td>-0.226843</td>
-          <td>-0.502618</td>
+          <td>-1.981692</td>
+          <td>1.265458</td>
           <td>NaN</td>
         </tr>
       </tbody>
@@ -1319,31 +1217,31 @@ drop
       <tbody>
         <tr>
           <th>1</th>
-          <td>-0.369415</td>
-          <td>0.087376</td>
-          <td>-0.273622</td>
-          <td>-1.187780</td>
+          <td>-1.467613</td>
+          <td>-0.863108</td>
+          <td>0.642762</td>
+          <td>0.090772</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>1.494696</td>
-          <td>0.733831</td>
-          <td>-0.175294</td>
-          <td>-0.066811</td>
+          <td>1.442440</td>
+          <td>-0.585124</td>
+          <td>-0.021404</td>
+          <td>-0.431891</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>-0.034685</td>
-          <td>-0.963611</td>
-          <td>0.816663</td>
-          <td>-1.962498</td>
+          <td>-0.894200</td>
+          <td>-0.772455</td>
+          <td>0.381860</td>
+          <td>-0.310073</td>
         </tr>
         <tr>
           <th>4</th>
-          <td>1.690612</td>
-          <td>0.871066</td>
-          <td>0.801409</td>
-          <td>-1.061566</td>
+          <td>-1.229319</td>
+          <td>0.992637</td>
+          <td>0.786276</td>
+          <td>-0.274459</td>
         </tr>
       </tbody>
     </table>
@@ -1386,39 +1284,39 @@ drop
       <tbody>
         <tr>
           <th>0</th>
-          <td>-0.226843</td>
-          <td>1.158647</td>
-          <td>-0.502618</td>
+          <td>-1.981692</td>
+          <td>0.431559</td>
+          <td>1.265458</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>-0.369415</td>
-          <td>0.087376</td>
-          <td>-0.273622</td>
+          <td>-1.467613</td>
+          <td>-0.863108</td>
+          <td>0.642762</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>1.494696</td>
-          <td>0.733831</td>
-          <td>-0.175294</td>
+          <td>1.442440</td>
+          <td>-0.585124</td>
+          <td>-0.021404</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>-0.034685</td>
-          <td>-0.963611</td>
-          <td>0.816663</td>
+          <td>-0.894200</td>
+          <td>-0.772455</td>
+          <td>0.381860</td>
         </tr>
         <tr>
           <th>4</th>
-          <td>1.690612</td>
-          <td>0.871066</td>
-          <td>0.801409</td>
+          <td>-1.229319</td>
+          <td>0.992637</td>
+          <td>0.786276</td>
         </tr>
         <tr>
           <th>5</th>
-          <td>-0.210004</td>
-          <td>-0.969129</td>
-          <td>-1.239798</td>
+          <td>-0.974433</td>
+          <td>0.991664</td>
+          <td>1.016668</td>
         </tr>
       </tbody>
     </table>
@@ -1462,45 +1360,45 @@ drop
       <tbody>
         <tr>
           <th>0</th>
-          <td>-0.226843</td>
-          <td>1.158647</td>
-          <td>-0.502618</td>
-          <td>-0.363415</td>
+          <td>-1.981692</td>
+          <td>0.431559</td>
+          <td>1.265458</td>
+          <td>-0.280410</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>-0.369415</td>
-          <td>0.087376</td>
-          <td>-0.273622</td>
-          <td>-1.187780</td>
+          <td>-1.467613</td>
+          <td>-0.863108</td>
+          <td>0.642762</td>
+          <td>0.090772</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>1.494696</td>
-          <td>0.733831</td>
-          <td>-0.175294</td>
-          <td>-0.066811</td>
+          <td>1.442440</td>
+          <td>-0.585124</td>
+          <td>-0.021404</td>
+          <td>-0.431891</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>-0.034685</td>
-          <td>-0.963611</td>
-          <td>0.816663</td>
-          <td>-1.962498</td>
+          <td>-0.894200</td>
+          <td>-0.772455</td>
+          <td>0.381860</td>
+          <td>-0.310073</td>
         </tr>
         <tr>
           <th>4</th>
-          <td>1.690612</td>
-          <td>0.871066</td>
-          <td>0.801409</td>
-          <td>-1.061566</td>
+          <td>-1.229319</td>
+          <td>0.992637</td>
+          <td>0.786276</td>
+          <td>-0.274459</td>
         </tr>
         <tr>
           <th>5</th>
-          <td>-0.210004</td>
-          <td>-0.969129</td>
-          <td>-1.239798</td>
-          <td>-1.063891</td>
+          <td>-0.974433</td>
+          <td>0.991664</td>
+          <td>1.016668</td>
+          <td>-0.086624</td>
         </tr>
       </tbody>
     </table>
@@ -1547,39 +1445,39 @@ drop
       <tbody>
         <tr>
           <th>0</th>
-          <td>-0.226843</td>
-          <td>1.158647</td>
-          <td>-0.502618</td>
+          <td>-1.981692</td>
+          <td>0.431559</td>
+          <td>1.265458</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>-0.369415</td>
-          <td>0.087376</td>
-          <td>-0.273622</td>
+          <td>-1.467613</td>
+          <td>-0.863108</td>
+          <td>0.642762</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>1.494696</td>
-          <td>0.733831</td>
-          <td>-0.175294</td>
+          <td>1.442440</td>
+          <td>-0.585124</td>
+          <td>-0.021404</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>-0.034685</td>
-          <td>-0.963611</td>
-          <td>0.816663</td>
+          <td>-0.894200</td>
+          <td>-0.772455</td>
+          <td>0.381860</td>
         </tr>
         <tr>
           <th>4</th>
-          <td>1.690612</td>
-          <td>0.871066</td>
-          <td>0.801409</td>
+          <td>-1.229319</td>
+          <td>0.992637</td>
+          <td>0.786276</td>
         </tr>
         <tr>
           <th>5</th>
-          <td>-0.210004</td>
-          <td>-0.969129</td>
-          <td>-1.239798</td>
+          <td>-0.974433</td>
+          <td>0.991664</td>
+          <td>1.016668</td>
         </tr>
       </tbody>
     </table>
@@ -1641,45 +1539,45 @@ DataFrames 创建
       <tbody>
         <tr>
           <th>2018-01-01</th>
-          <td>-0.505713</td>
-          <td>-1.323337</td>
-          <td>-1.056445</td>
-          <td>0.804812</td>
+          <td>-0.641316</td>
+          <td>-0.674096</td>
+          <td>-0.432712</td>
+          <td>0.749219</td>
         </tr>
         <tr>
           <th>2018-01-02</th>
-          <td>-0.767402</td>
-          <td>0.893677</td>
-          <td>-1.315020</td>
-          <td>0.163473</td>
+          <td>0.582931</td>
+          <td>-0.931636</td>
+          <td>-0.278993</td>
+          <td>-0.253118</td>
         </tr>
         <tr>
           <th>2018-01-03</th>
-          <td>0.837288</td>
-          <td>0.126999</td>
-          <td>-0.374810</td>
-          <td>-2.253120</td>
+          <td>0.308169</td>
+          <td>-0.728290</td>
+          <td>-0.171988</td>
+          <td>-1.987203</td>
         </tr>
         <tr>
           <th>2018-01-04</th>
-          <td>1.358501</td>
-          <td>0.233152</td>
-          <td>-0.469011</td>
-          <td>-0.033871</td>
+          <td>-1.215662</td>
+          <td>1.261831</td>
+          <td>-2.407712</td>
+          <td>0.749945</td>
         </tr>
         <tr>
           <th>2018-01-05</th>
-          <td>0.657167</td>
-          <td>-2.194573</td>
-          <td>-0.880417</td>
-          <td>0.165436</td>
+          <td>-0.989210</td>
+          <td>0.531887</td>
+          <td>1.947686</td>
+          <td>0.159891</td>
         </tr>
         <tr>
           <th>2018-01-06</th>
-          <td>-0.137834</td>
-          <td>-0.467439</td>
-          <td>1.357028</td>
-          <td>-1.473897</td>
+          <td>1.184290</td>
+          <td>0.572910</td>
+          <td>1.394792</td>
+          <td>2.442256</td>
         </tr>
       </tbody>
     </table>
@@ -1848,12 +1746,12 @@ DataFrame 全局操作
 
 .. parsed-literal::
 
-    array([[ 0.6299583 , -0.18556978,  2.15885328,  0.529414  ],
-           [-0.39691601, -0.72288203,  0.93630284, -0.30947737],
-           [-2.57781716,  1.79611764, -1.42998116,  1.61489144],
-           [-0.69515181, -0.65765834, -0.36656572,  2.37444647],
-           [-1.64081203, -1.25559697,  0.00749343,  0.25727969],
-           [ 0.30799912,  0.35052124, -1.50562504,  0.33965452]])
+    array([[ 0.58960302, -0.19577649, -0.00824168, -1.008918  ],
+           [-0.57216355, -1.50805737, -1.13640656,  0.47105459],
+           [-0.59550774,  2.14649034, -0.21757789,  0.13995194],
+           [ 0.93981742, -0.76565382,  0.88382764,  0.70731021],
+           [-0.69314374,  0.07583509,  0.07626148,  0.86108068],
+           [ 0.35534218,  0.10880558, -1.58238107,  0.85682813]])
 
 
 
@@ -1900,52 +1798,52 @@ DataFrame 全局操作
         </tr>
         <tr>
           <th>mean</th>
-          <td>-0.728790</td>
-          <td>-0.112511</td>
-          <td>-0.033254</td>
-          <td>0.801035</td>
+          <td>0.003991</td>
+          <td>-0.023059</td>
+          <td>-0.330753</td>
+          <td>0.337885</td>
         </tr>
         <tr>
           <th>std</th>
-          <td>1.206904</td>
-          <td>1.080646</td>
-          <td>1.412576</td>
-          <td>0.995343</td>
+          <td>0.709861</td>
+          <td>1.226427</td>
+          <td>0.891441</td>
+          <td>0.714185</td>
         </tr>
         <tr>
           <th>min</th>
-          <td>-2.577817</td>
-          <td>-1.255597</td>
-          <td>-1.505625</td>
-          <td>-0.309477</td>
+          <td>-0.693144</td>
+          <td>-1.508057</td>
+          <td>-1.582381</td>
+          <td>-1.008918</td>
         </tr>
         <tr>
           <th>25%</th>
-          <td>-1.404397</td>
-          <td>-0.706576</td>
-          <td>-1.164127</td>
-          <td>0.277873</td>
+          <td>-0.589672</td>
+          <td>-0.623184</td>
+          <td>-0.906699</td>
+          <td>0.222728</td>
         </tr>
         <tr>
           <th>50%</th>
-          <td>-0.546034</td>
-          <td>-0.421614</td>
-          <td>-0.179536</td>
-          <td>0.434534</td>
+          <td>-0.108411</td>
+          <td>-0.059971</td>
+          <td>-0.112910</td>
+          <td>0.589182</td>
         </tr>
         <tr>
           <th>75%</th>
-          <td>0.131770</td>
-          <td>0.216498</td>
-          <td>0.704100</td>
-          <td>1.343522</td>
+          <td>0.531038</td>
+          <td>0.100563</td>
+          <td>0.055136</td>
+          <td>0.819449</td>
         </tr>
         <tr>
           <th>max</th>
-          <td>0.629958</td>
-          <td>1.796118</td>
-          <td>2.158853</td>
-          <td>2.374446</td>
+          <td>0.939817</td>
+          <td>2.146490</td>
+          <td>0.883828</td>
+          <td>0.861081</td>
         </tr>
       </tbody>
     </table>
@@ -1991,39 +1889,39 @@ DataFrame 全局操作
       <tbody>
         <tr>
           <th>A</th>
-          <td>0.629958</td>
-          <td>-0.396916</td>
-          <td>-2.577817</td>
-          <td>-0.695152</td>
-          <td>-1.640812</td>
-          <td>0.307999</td>
+          <td>0.589603</td>
+          <td>-0.572164</td>
+          <td>-0.595508</td>
+          <td>0.939817</td>
+          <td>-0.693144</td>
+          <td>0.355342</td>
         </tr>
         <tr>
           <th>B</th>
-          <td>-0.185570</td>
-          <td>-0.722882</td>
-          <td>1.796118</td>
-          <td>-0.657658</td>
-          <td>-1.255597</td>
-          <td>0.350521</td>
+          <td>-0.195776</td>
+          <td>-1.508057</td>
+          <td>2.146490</td>
+          <td>-0.765654</td>
+          <td>0.075835</td>
+          <td>0.108806</td>
         </tr>
         <tr>
           <th>C</th>
-          <td>2.158853</td>
-          <td>0.936303</td>
-          <td>-1.429981</td>
-          <td>-0.366566</td>
-          <td>0.007493</td>
-          <td>-1.505625</td>
+          <td>-0.008242</td>
+          <td>-1.136407</td>
+          <td>-0.217578</td>
+          <td>0.883828</td>
+          <td>0.076261</td>
+          <td>-1.582381</td>
         </tr>
         <tr>
           <th>D</th>
-          <td>0.529414</td>
-          <td>-0.309477</td>
-          <td>1.614891</td>
-          <td>2.374446</td>
-          <td>0.257280</td>
-          <td>0.339655</td>
+          <td>-1.008918</td>
+          <td>0.471055</td>
+          <td>0.139952</td>
+          <td>0.707310</td>
+          <td>0.861081</td>
+          <td>0.856828</td>
         </tr>
       </tbody>
     </table>
@@ -2247,111 +2145,6 @@ DataFrame 全局操作
                      squeeze=False, **kwds)
 
 Read an Excel table into a pandas DataFrame
-
-Parameters
-^^^^^^^^^^
-
--  io : string, path object (pathlib.Path or py._path.local.LocalPath),
-   file-like object, pandas ExcelFile, or xlrd workbook. The string
-   could be a URL. Valid URL schemes include http, ftp, s3, and file.
-   For file URLs, a host is expected. For instance, a local file could
-   be file://localhost/path/to/workbook.xlsx
-
--  sheet_name : string, int, mixed list of strings/ints, or None,
-   default 0 Strings are used for sheet names, Integers are used in
-   zero-indexed sheet positions. Lists of strings/integers are used to
-   request multiple sheets. Specify None to get all sheets. str|int ->
-   DataFrame is returned. list|None -> Dict of DataFrames is returned,
-   with keys representing sheets. Available Cases • Defaults to 0 -> 1st
-   sheet as a DataFrame • 1 -> 2nd sheet as a DataFrame • “Sheet1” ->
-   1st sheet as a DataFrame • [0,1,”Sheet5”] -> 1st, 2nd & 5th sheet as
-   a dictionary of DataFrames • None -> All sheets as a dictionary of
-   DataFrames
-
--  sheetname : string, int, mixed list of strings/ints, or None, default
-   0 Deprecated since version 0.21.0: Use sheet_name instead
-
--  header : int, list of ints, default 0 Row (0-indexed) to use for the
-   column labels of the parsed DataFrame. If a list of integers is
-   passed those row positions will be combined into a MultiIndex. Use
-   None if there is no header.
-
--  skiprows : list-like Rows to skip at the beginning (0-indexed)
-
--  skip_footer : int, default 0 Rows at the end to skip (0-indexed)
-
--  index_col : int, list of ints, default None Column (0-indexed) to use
-   as the row labels of the DataFrame. Pass None if there is no such
-   column. If a list is passed, those columns will be combined into a
-   MultiIndex. If a subset of data is selected with usecols, index_col
-   is based on the subset.
-
--  names : array-like, default None List of column names to use. If file
-   contains no header row, then you should explicitly pass header=None
-
--  converters : dict, default None Dict of functions for converting
-   values in certain columns. Keys can either be integers or column
-   labels, values are functions that take one input argument, the Excel
-   cell content, and return the transformed content.
-
--  dtype : Type name or dict of column -> type, default None Data type
-   for data or columns. E.g. {‘a’: np.float64, ‘b’: np.int32} Use object
-   to preserve data as stored in Excel and not interpret dtype. If
-   converters are specified, they will be applied INSTEAD of dtype
-   conversion. New in version 0.20.0. 例如：把数据都作为 str
-   读入，那么可以使用 ``dtype=str`` 。
-
--  true_values : list, default None Values to consider as True New in
-   version 0.19.0.
-
--  false_values : list, default None Values to consider as False New in
-   version 0.19.0.
-
--  parse_cols : int or list, default None Deprecated since version
-   0.21.0: Pass in usecols instead.
-
--  usecols : int or list, default None • If None then parse all columns,
-   • If int then indicates last column to be parsed • If list of ints
-   then indicates list of column numbers to be parsed • If string then
-   indicates comma separated list of Excel column letters and column
-   ranges (e.g. “A:E” or “A,C,E:F”). Ranges are inclusive of both sides.
-
--  squeeze : boolean, default False If the parsed data only contains one
-   column then return a Series
-
--  na_values : scalar, str, list-like, or dict, default None Additional
-   strings to recognize as NA/NaN. If dict passed, specific per-column
-   NA values. By default the following values are interpreted as NaN:
-   ‘’, ‘#N/A’, ‘#N/A N/A’, ‘#NA’, ‘-1.#IND’, ‘-1.#QNAN’, ‘-NaN’, ‘-nan’,
-   ‘1.#IND’, ‘1.#QNAN’, ‘N/A’, ‘NA’, ‘NULL’, ‘NaN’, ‘n/a’, ‘nan’,
-   ‘null’.
-
--  thousands : str, default None Thousands separator for parsing string
-   columns to numeric. Note that this parameter is only necessary for
-   columns stored as TEXT in Excel, any numeric columns will
-   automatically be parsed, regardless of display format.
-
--  keep_default_na : bool, default True If na_values are specified and
-   keep_default_na is False the default NaN values are over-ridden,
-   otherwise they’re appended to.
-
--  verbose : boolean, default False Indicate number of NA values placed
-   in non-numeric columns
-
--  engine: string, default None If io is not a buffer or path, this must
-   be set to identify io. Acceptable values are None or xlrd
-
--  convert_float : boolean, default True convert integral floats to int
-   (i.e., 1.0 –> 1). If False, all numeric data will be read in as
-   floats: Excel stores all numbers as floats internally
-
-Returns
-^^^^^^^
-
-parsed : DataFrame or Dict of DataFrames
-
-DataFrame from the passed in Excel file. See notes in sheet_name
-argument for more information on when a Dict of Dataframes is returned.
 
 复制数据
 --------
@@ -4698,45 +4491,45 @@ another variable before reassigning the columns.
       <tbody>
         <tr>
           <th>2020-01-01</th>
-          <td>-0.301754</td>
-          <td>0.312629</td>
-          <td>0.470351</td>
-          <td>0.663042</td>
+          <td>0.598449</td>
+          <td>-0.343405</td>
+          <td>-0.336232</td>
+          <td>1.564981</td>
         </tr>
         <tr>
           <th>2020-01-02</th>
-          <td>-1.172193</td>
-          <td>-1.589058</td>
-          <td>-0.863646</td>
-          <td>1.167042</td>
+          <td>-1.776394</td>
+          <td>-0.655185</td>
+          <td>-1.960710</td>
+          <td>-1.297686</td>
         </tr>
         <tr>
           <th>2020-01-03</th>
-          <td>0.069776</td>
-          <td>0.690717</td>
-          <td>-1.530472</td>
-          <td>-0.851705</td>
+          <td>0.011752</td>
+          <td>-0.393321</td>
+          <td>0.107292</td>
+          <td>1.261636</td>
         </tr>
         <tr>
           <th>2020-01-04</th>
-          <td>-0.948720</td>
-          <td>-0.427022</td>
-          <td>1.322175</td>
-          <td>-1.825546</td>
+          <td>-0.704756</td>
+          <td>-0.068928</td>
+          <td>-0.274512</td>
+          <td>0.087989</td>
         </tr>
         <tr>
           <th>2020-01-05</th>
-          <td>1.081163</td>
-          <td>0.141194</td>
-          <td>0.407674</td>
-          <td>0.176009</td>
+          <td>-1.561700</td>
+          <td>0.081027</td>
+          <td>0.160828</td>
+          <td>-1.990220</td>
         </tr>
         <tr>
           <th>2020-01-06</th>
-          <td>0.280026</td>
-          <td>-0.745808</td>
-          <td>-0.300293</td>
-          <td>0.439330</td>
+          <td>-1.139726</td>
+          <td>0.729122</td>
+          <td>0.567693</td>
+          <td>1.949325</td>
         </tr>
       </tbody>
     </table>
@@ -4784,45 +4577,45 @@ another variable before reassigning the columns.
       <tbody>
         <tr>
           <th>2020-01-01</th>
-          <td>-0.301754</td>
-          <td>0.312629</td>
-          <td>0.470351</td>
-          <td>0.663042</td>
+          <td>0.598449</td>
+          <td>-0.343405</td>
+          <td>0.000000</td>
+          <td>1.564981</td>
         </tr>
         <tr>
           <th>2020-01-02</th>
-          <td>-1.172193</td>
-          <td>-1.589058</td>
+          <td>-1.776394</td>
+          <td>-0.655185</td>
           <td>0.000000</td>
-          <td>1.167042</td>
+          <td>-1.297686</td>
         </tr>
         <tr>
           <th>2020-01-03</th>
-          <td>0.069776</td>
-          <td>0.690717</td>
-          <td>0.000000</td>
-          <td>-0.851705</td>
+          <td>0.011752</td>
+          <td>-0.393321</td>
+          <td>0.107292</td>
+          <td>1.261636</td>
         </tr>
         <tr>
           <th>2020-01-04</th>
-          <td>-0.948720</td>
-          <td>-0.427022</td>
-          <td>1.322175</td>
-          <td>-1.825546</td>
+          <td>-0.704756</td>
+          <td>-0.068928</td>
+          <td>0.000000</td>
+          <td>0.087989</td>
         </tr>
         <tr>
           <th>2020-01-05</th>
-          <td>1.081163</td>
-          <td>0.141194</td>
-          <td>0.407674</td>
-          <td>0.176009</td>
+          <td>-1.561700</td>
+          <td>0.081027</td>
+          <td>0.160828</td>
+          <td>-1.990220</td>
         </tr>
         <tr>
           <th>2020-01-06</th>
-          <td>0.280026</td>
-          <td>-0.745808</td>
-          <td>0.000000</td>
-          <td>0.439330</td>
+          <td>-1.139726</td>
+          <td>0.729122</td>
+          <td>0.567693</td>
+          <td>1.949325</td>
         </tr>
       </tbody>
     </table>
@@ -4870,45 +4663,45 @@ another variable before reassigning the columns.
       <tbody>
         <tr>
           <th>2020-01-01</th>
-          <td>-0.301754</td>
-          <td>0.312629</td>
-          <td>0.470351</td>
-          <td>0.663042</td>
+          <td>0.598449</td>
+          <td>-0.343405</td>
+          <td>0.000000</td>
+          <td>1.564981</td>
         </tr>
         <tr>
           <th>2020-01-02</th>
-          <td>-1.172193</td>
-          <td>-1.589058</td>
+          <td>-1.776394</td>
+          <td>-0.655185</td>
           <td>0.000000</td>
-          <td>1.167042</td>
+          <td>0.000000</td>
         </tr>
         <tr>
           <th>2020-01-03</th>
-          <td>0.069776</td>
-          <td>0.690717</td>
-          <td>0.000000</td>
-          <td>0.000000</td>
+          <td>0.011752</td>
+          <td>-0.393321</td>
+          <td>0.107292</td>
+          <td>1.261636</td>
         </tr>
         <tr>
           <th>2020-01-04</th>
-          <td>-0.948720</td>
-          <td>-0.427022</td>
-          <td>1.322175</td>
+          <td>-0.704756</td>
+          <td>-0.068928</td>
           <td>0.000000</td>
+          <td>0.087989</td>
         </tr>
         <tr>
           <th>2020-01-05</th>
-          <td>1.081163</td>
-          <td>0.141194</td>
-          <td>0.407674</td>
-          <td>0.176009</td>
+          <td>-1.561700</td>
+          <td>0.081027</td>
+          <td>0.160828</td>
+          <td>0.000000</td>
         </tr>
         <tr>
           <th>2020-01-06</th>
-          <td>0.280026</td>
-          <td>-0.745808</td>
-          <td>0.000000</td>
-          <td>0.439330</td>
+          <td>-1.139726</td>
+          <td>0.729122</td>
+          <td>0.567693</td>
+          <td>1.949325</td>
         </tr>
       </tbody>
     </table>
@@ -4956,45 +4749,45 @@ another variable before reassigning the columns.
       <tbody>
         <tr>
           <th>2020-01-01</th>
-          <td>-30.175387</td>
-          <td>31.262911</td>
-          <td>0.470351</td>
-          <td>0.663042</td>
+          <td>59.844883</td>
+          <td>-34.340501</td>
+          <td>0.000000</td>
+          <td>1.564981</td>
         </tr>
         <tr>
           <th>2020-01-02</th>
-          <td>-117.219285</td>
-          <td>-158.905841</td>
+          <td>-177.639426</td>
+          <td>-65.518534</td>
           <td>0.000000</td>
-          <td>1.167042</td>
+          <td>0.000000</td>
         </tr>
         <tr>
           <th>2020-01-03</th>
-          <td>6.977601</td>
-          <td>69.071740</td>
-          <td>0.000000</td>
-          <td>0.000000</td>
+          <td>1.175221</td>
+          <td>-39.332118</td>
+          <td>0.107292</td>
+          <td>1.261636</td>
         </tr>
         <tr>
           <th>2020-01-04</th>
-          <td>-94.871996</td>
-          <td>-42.702220</td>
-          <td>1.322175</td>
+          <td>-70.475643</td>
+          <td>-6.892764</td>
           <td>0.000000</td>
+          <td>0.087989</td>
         </tr>
         <tr>
           <th>2020-01-05</th>
-          <td>108.116332</td>
-          <td>14.119431</td>
-          <td>0.407674</td>
-          <td>0.176009</td>
+          <td>-156.170047</td>
+          <td>8.102672</td>
+          <td>0.160828</td>
+          <td>0.000000</td>
         </tr>
         <tr>
           <th>2020-01-06</th>
-          <td>28.002627</td>
-          <td>-74.580777</td>
-          <td>0.000000</td>
-          <td>0.439330</td>
+          <td>-113.972600</td>
+          <td>72.912210</td>
+          <td>0.567693</td>
+          <td>1.949325</td>
         </tr>
       </tbody>
     </table>
@@ -5350,8 +5143,7 @@ another variable before reassigning the columns.
 
 .. code:: ipython3
 
-    df_movies = get_movie_df()
-    df = df_movies.copy()
+    df = get_iris_df()
     df.head()
 
 
@@ -5377,65 +5169,53 @@ another variable before reassigning the columns.
       <thead>
         <tr style="text-align: right;">
           <th></th>
-          <th>Row</th>
-          <th>Date</th>
-          <th>Day</th>
-          <th>Day#</th>
-          <th>Top 10 Gross</th>
-          <th>#1 Movie</th>
-          <th>Gross</th>
+          <th>petalLength</th>
+          <th>petalWidth</th>
+          <th>sepalLength</th>
+          <th>sepalWidth</th>
+          <th>species</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <th>0</th>
-          <td>1</td>
-          <td>Jan. 30</td>
-          <td>Fri</td>
-          <td>30</td>
-          <td>26168351</td>
-          <td>American Sniper</td>
-          <td>9905616</td>
+          <td>1.4</td>
+          <td>0.2</td>
+          <td>5.1</td>
+          <td>3.5</td>
+          <td>setosa</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>2</td>
-          <td>Jan. 31</td>
-          <td>Sat</td>
-          <td>31</td>
-          <td>41633588</td>
-          <td>American Sniper</td>
-          <td>16510536</td>
+          <td>1.4</td>
+          <td>0.2</td>
+          <td>4.9</td>
+          <td>3.0</td>
+          <td>setosa</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>3</td>
-          <td>Feb. 1</td>
-          <td>Sun</td>
-          <td>32</td>
-          <td>12515579</td>
-          <td>American Sniper</td>
-          <td>4244376</td>
+          <td>1.3</td>
+          <td>0.2</td>
+          <td>4.7</td>
+          <td>3.2</td>
+          <td>setosa</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>4</td>
-          <td>Feb. 2</td>
-          <td>Mon</td>
-          <td>33</td>
-          <td>6475068</td>
-          <td>American Sniper</td>
-          <td>2645109</td>
+          <td>1.5</td>
+          <td>0.2</td>
+          <td>4.6</td>
+          <td>3.1</td>
+          <td>setosa</td>
         </tr>
         <tr>
           <th>4</th>
-          <td>5</td>
-          <td>Feb. 3</td>
-          <td>Tue</td>
-          <td>34</td>
-          <td>7825091</td>
-          <td>American Sniper</td>
-          <td>2923141</td>
+          <td>1.4</td>
+          <td>0.2</td>
+          <td>5.0</td>
+          <td>3.6</td>
+          <td>setosa</td>
         </tr>
       </tbody>
     </table>
@@ -5477,65 +5257,53 @@ another variable before reassigning the columns.
       <thead>
         <tr style="text-align: right;">
           <th></th>
-          <th>Row</th>
-          <th>Date</th>
-          <th>Day</th>
-          <th>Day#</th>
-          <th>Top 10 Gross</th>
-          <th>#1 Movie</th>
-          <th>Gross</th>
+          <th>petalLength</th>
+          <th>petalWidth</th>
+          <th>sepalLength</th>
+          <th>sepalWidth</th>
+          <th>species</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <th>1</th>
-          <td>1</td>
-          <td>Jan. 30</td>
-          <td>Fri</td>
-          <td>30</td>
-          <td>26168351</td>
-          <td>American Sniper</td>
-          <td>9905616</td>
+          <td>1.4</td>
+          <td>0.2</td>
+          <td>5.1</td>
+          <td>3.5</td>
+          <td>setosa</td>
         </tr>
         <tr>
           <th>2</th>
-          <td>2</td>
-          <td>Jan. 31</td>
-          <td>Sat</td>
-          <td>31</td>
-          <td>41633588</td>
-          <td>American Sniper</td>
-          <td>16510536</td>
+          <td>1.4</td>
+          <td>0.2</td>
+          <td>4.9</td>
+          <td>3.0</td>
+          <td>setosa</td>
         </tr>
         <tr>
           <th>3</th>
-          <td>3</td>
-          <td>Feb. 1</td>
-          <td>Sun</td>
-          <td>32</td>
-          <td>12515579</td>
-          <td>American Sniper</td>
-          <td>4244376</td>
+          <td>1.3</td>
+          <td>0.2</td>
+          <td>4.7</td>
+          <td>3.2</td>
+          <td>setosa</td>
         </tr>
         <tr>
           <th>4</th>
-          <td>4</td>
-          <td>Feb. 2</td>
-          <td>Mon</td>
-          <td>33</td>
-          <td>6475068</td>
-          <td>American Sniper</td>
-          <td>2645109</td>
+          <td>1.5</td>
+          <td>0.2</td>
+          <td>4.6</td>
+          <td>3.1</td>
+          <td>setosa</td>
         </tr>
         <tr>
           <th>5</th>
-          <td>5</td>
-          <td>Feb. 3</td>
-          <td>Tue</td>
-          <td>34</td>
-          <td>7825091</td>
-          <td>American Sniper</td>
-          <td>2923141</td>
+          <td>1.4</td>
+          <td>0.2</td>
+          <td>5.0</td>
+          <td>3.6</td>
+          <td>setosa</td>
         </tr>
       </tbody>
     </table>
@@ -5545,13 +5313,12 @@ another variable before reassigning the columns.
 
 .. code:: ipython3
 
-    df = df_movies.copy()
     # 添加一个空行
-    df = df.append(pd.Series(
+    new_df = df.append(pd.Series(
                     [np.nan]*len(df.columns), # Fill cells with NaNs
                     index=df.columns),
                     ignore_index=True)
-    df.tail(3)
+    new_df.tail()
 
 
 
@@ -5576,40 +5343,48 @@ another variable before reassigning the columns.
       <thead>
         <tr style="text-align: right;">
           <th></th>
-          <th>Row</th>
-          <th>Date</th>
-          <th>Day</th>
-          <th>Day#</th>
-          <th>Top 10 Gross</th>
-          <th>#1 Movie</th>
-          <th>Gross</th>
+          <th>petalLength</th>
+          <th>petalWidth</th>
+          <th>sepalLength</th>
+          <th>sepalWidth</th>
+          <th>species</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <th>27</th>
-          <td>28.0</td>
-          <td>Feb. 26</td>
-          <td>Thu</td>
-          <td>57.0</td>
-          <td>7161773.0</td>
-          <td>Fifty Shades of Grey</td>
-          <td>1790520.0</td>
+          <th>146</th>
+          <td>5.0</td>
+          <td>1.9</td>
+          <td>6.3</td>
+          <td>2.5</td>
+          <td>virginica</td>
         </tr>
         <tr>
-          <th>28</th>
-          <td>29.0</td>
-          <td>Feb. 27</td>
-          <td>Fri</td>
-          <td>58.0</td>
-          <td>26457000.0</td>
-          <td>Focus (2015)</td>
-          <td>6465000.0</td>
+          <th>147</th>
+          <td>5.2</td>
+          <td>2.0</td>
+          <td>6.5</td>
+          <td>3.0</td>
+          <td>virginica</td>
         </tr>
         <tr>
-          <th>29</th>
-          <td>NaN</td>
-          <td>NaN</td>
+          <th>148</th>
+          <td>5.4</td>
+          <td>2.3</td>
+          <td>6.2</td>
+          <td>3.4</td>
+          <td>virginica</td>
+        </tr>
+        <tr>
+          <th>149</th>
+          <td>5.1</td>
+          <td>1.8</td>
+          <td>5.9</td>
+          <td>3.0</td>
+          <td>virginica</td>
+        </tr>
+        <tr>
+          <th>150</th>
           <td>NaN</td>
           <td>NaN</td>
           <td>NaN</td>
@@ -5618,6 +5393,139 @@ another variable before reassigning the columns.
         </tr>
       </tbody>
     </table>
+    </div>
+
+
+
+删除空行
+~~~~~~~~
+
+.. code:: ipython3
+
+    df[~(df['petalLength'].isnull())]
+
+
+
+
+.. raw:: html
+
+    <div>
+    <style scoped>
+        .dataframe tbody tr th:only-of-type {
+            vertical-align: middle;
+        }
+    
+        .dataframe tbody tr th {
+            vertical-align: top;
+        }
+    
+        .dataframe thead th {
+            text-align: right;
+        }
+    </style>
+    <table border="1" class="dataframe">
+      <thead>
+        <tr style="text-align: right;">
+          <th></th>
+          <th>petalLength</th>
+          <th>petalWidth</th>
+          <th>sepalLength</th>
+          <th>sepalWidth</th>
+          <th>species</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>1</th>
+          <td>1.4</td>
+          <td>0.2</td>
+          <td>5.1</td>
+          <td>3.5</td>
+          <td>setosa</td>
+        </tr>
+        <tr>
+          <th>2</th>
+          <td>1.4</td>
+          <td>0.2</td>
+          <td>4.9</td>
+          <td>3.0</td>
+          <td>setosa</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>1.3</td>
+          <td>0.2</td>
+          <td>4.7</td>
+          <td>3.2</td>
+          <td>setosa</td>
+        </tr>
+        <tr>
+          <th>4</th>
+          <td>1.5</td>
+          <td>0.2</td>
+          <td>4.6</td>
+          <td>3.1</td>
+          <td>setosa</td>
+        </tr>
+        <tr>
+          <th>5</th>
+          <td>1.4</td>
+          <td>0.2</td>
+          <td>5.0</td>
+          <td>3.6</td>
+          <td>setosa</td>
+        </tr>
+        <tr>
+          <th>...</th>
+          <td>...</td>
+          <td>...</td>
+          <td>...</td>
+          <td>...</td>
+          <td>...</td>
+        </tr>
+        <tr>
+          <th>146</th>
+          <td>5.2</td>
+          <td>2.3</td>
+          <td>6.7</td>
+          <td>3.0</td>
+          <td>virginica</td>
+        </tr>
+        <tr>
+          <th>147</th>
+          <td>5.0</td>
+          <td>1.9</td>
+          <td>6.3</td>
+          <td>2.5</td>
+          <td>virginica</td>
+        </tr>
+        <tr>
+          <th>148</th>
+          <td>5.2</td>
+          <td>2.0</td>
+          <td>6.5</td>
+          <td>3.0</td>
+          <td>virginica</td>
+        </tr>
+        <tr>
+          <th>149</th>
+          <td>5.4</td>
+          <td>2.3</td>
+          <td>6.2</td>
+          <td>3.4</td>
+          <td>virginica</td>
+        </tr>
+        <tr>
+          <th>150</th>
+          <td>5.1</td>
+          <td>1.8</td>
+          <td>5.9</td>
+          <td>3.0</td>
+          <td>virginica</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>150 rows × 5 columns</p>
     </div>
 
 
@@ -5663,13 +5571,13 @@ apply, applymap, map 区别
       <tbody>
         <tr>
           <th>0</th>
-          <td>-0.645648</td>
-          <td>-0.380253</td>
+          <td>-0.671187</td>
+          <td>-1.168787</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>-0.414017</td>
-          <td>0.240781</td>
+          <td>0.914042</td>
+          <td>1.100162</td>
         </tr>
       </tbody>
     </table>
@@ -5687,8 +5595,8 @@ apply, applymap, map 区别
 
 .. parsed-literal::
 
-    A   -1.059665
-    B   -0.139472
+    A    0.242855
+    B   -0.068625
     dtype: float64
 
 
@@ -5703,8 +5611,8 @@ apply, applymap, map 区别
 
 .. parsed-literal::
 
-    0   -1.025901
-    1   -0.173236
+    0   -1.839974
+    1    2.014204
     dtype: float64
 
 
@@ -5744,13 +5652,13 @@ apply, applymap, map 区别
       <tbody>
         <tr>
           <th>0</th>
-          <td>-0.65</td>
-          <td>-0.38</td>
+          <td>-0.67</td>
+          <td>-1.17</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>-0.41</td>
-          <td>0.24</td>
+          <td>0.91</td>
+          <td>1.10</td>
         </tr>
       </tbody>
     </table>
@@ -5792,11 +5700,11 @@ apply, applymap, map 区别
       <tbody>
         <tr>
           <th>0</th>
-          <td>-0.65</td>
+          <td>-0.67</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>-0.41</td>
+          <td>0.91</td>
         </tr>
       </tbody>
     </table>
@@ -5814,8 +5722,8 @@ apply, applymap, map 区别
 
 .. parsed-literal::
 
-    0    -0.65
-    1    -0.41
+    0    -0.67
+    1     0.91
     Name: A, dtype: object
 
 
@@ -5868,13 +5776,13 @@ apply, applymap, map 区别
       <tbody>
         <tr>
           <th>0</th>
-          <td>-0.645648</td>
-          <td>-0.380253</td>
+          <td>-0.671187</td>
+          <td>-1.168787</td>
         </tr>
         <tr>
           <th>1</th>
-          <td>-0.414017</td>
-          <td>0.240781</td>
+          <td>0.914042</td>
+          <td>1.100162</td>
         </tr>
       </tbody>
     </table>
@@ -6840,87 +6748,87 @@ append
       <tbody>
         <tr>
           <th>2020-01-01</th>
-          <td>0.494922</td>
-          <td>-0.224030</td>
-          <td>-0.746029</td>
-          <td>-0.247138</td>
+          <td>-0.111651</td>
+          <td>-0.223500</td>
+          <td>-1.623665</td>
+          <td>0.438040</td>
         </tr>
         <tr>
           <th>2020-01-02</th>
-          <td>-0.251526</td>
-          <td>-0.659848</td>
-          <td>-0.640088</td>
-          <td>-0.796820</td>
+          <td>0.569454</td>
+          <td>-1.054826</td>
+          <td>1.166425</td>
+          <td>-0.906784</td>
         </tr>
         <tr>
           <th>2020-01-03</th>
-          <td>-0.884604</td>
-          <td>-1.419526</td>
-          <td>-0.453942</td>
-          <td>0.084406</td>
+          <td>1.750348</td>
+          <td>-1.179157</td>
+          <td>0.297452</td>
+          <td>-0.330911</td>
         </tr>
         <tr>
           <th>2020-01-04</th>
-          <td>1.921669</td>
-          <td>0.710321</td>
-          <td>0.897249</td>
-          <td>-0.824313</td>
+          <td>-0.285845</td>
+          <td>-0.112369</td>
+          <td>0.963262</td>
+          <td>-0.920508</td>
         </tr>
         <tr>
           <th>2020-01-05</th>
-          <td>-1.471776</td>
-          <td>1.414213</td>
-          <td>0.524960</td>
-          <td>0.222142</td>
+          <td>-0.799624</td>
+          <td>0.178560</td>
+          <td>-0.372569</td>
+          <td>1.073806</td>
         </tr>
         <tr>
           <th>2020-01-06</th>
-          <td>-1.883648</td>
-          <td>0.171647</td>
-          <td>-0.306301</td>
-          <td>-0.784412</td>
+          <td>-0.610837</td>
+          <td>-0.713660</td>
+          <td>-1.517435</td>
+          <td>-0.543449</td>
         </tr>
         <tr>
           <th>2020-01-01</th>
-          <td>0.476238</td>
-          <td>1.613003</td>
-          <td>-1.026390</td>
-          <td>-1.501116</td>
+          <td>0.010144</td>
+          <td>0.588250</td>
+          <td>1.253550</td>
+          <td>0.637502</td>
         </tr>
         <tr>
           <th>2020-01-02</th>
-          <td>-0.684580</td>
-          <td>-2.065137</td>
-          <td>0.325007</td>
-          <td>-1.586730</td>
+          <td>0.666686</td>
+          <td>0.247768</td>
+          <td>-0.731746</td>
+          <td>-1.533164</td>
         </tr>
         <tr>
           <th>2020-01-03</th>
-          <td>-2.134206</td>
-          <td>-2.763041</td>
-          <td>-0.947888</td>
-          <td>0.869361</td>
+          <td>0.561260</td>
+          <td>-1.913553</td>
+          <td>-1.038617</td>
+          <td>1.225970</td>
         </tr>
         <tr>
           <th>2020-01-04</th>
-          <td>-1.619085</td>
-          <td>-1.628924</td>
-          <td>0.689769</td>
-          <td>1.164203</td>
+          <td>-0.764545</td>
+          <td>-1.584214</td>
+          <td>1.700780</td>
+          <td>1.784885</td>
         </tr>
         <tr>
           <th>2020-01-05</th>
-          <td>-0.357914</td>
-          <td>-0.737719</td>
-          <td>1.117398</td>
-          <td>-0.230982</td>
+          <td>-0.080562</td>
+          <td>0.912078</td>
+          <td>-0.020078</td>
+          <td>1.247597</td>
         </tr>
         <tr>
           <th>2020-01-06</th>
-          <td>0.902593</td>
-          <td>0.363705</td>
-          <td>-1.333352</td>
-          <td>-1.184695</td>
+          <td>0.364877</td>
+          <td>-0.295398</td>
+          <td>0.077122</td>
+          <td>-1.658979</td>
         </tr>
       </tbody>
     </table>
@@ -6972,69 +6880,69 @@ join
       <tbody>
         <tr>
           <th>2020-01-01</th>
-          <td>0.494922</td>
-          <td>-0.224030</td>
-          <td>-0.746029</td>
-          <td>-0.247138</td>
-          <td>0.476238</td>
-          <td>1.613003</td>
-          <td>-1.026390</td>
-          <td>-1.501116</td>
+          <td>-0.111651</td>
+          <td>-0.223500</td>
+          <td>-1.623665</td>
+          <td>0.438040</td>
+          <td>0.010144</td>
+          <td>0.588250</td>
+          <td>1.253550</td>
+          <td>0.637502</td>
         </tr>
         <tr>
           <th>2020-01-02</th>
-          <td>-0.251526</td>
-          <td>-0.659848</td>
-          <td>-0.640088</td>
-          <td>-0.796820</td>
-          <td>-0.684580</td>
-          <td>-2.065137</td>
-          <td>0.325007</td>
-          <td>-1.586730</td>
+          <td>0.569454</td>
+          <td>-1.054826</td>
+          <td>1.166425</td>
+          <td>-0.906784</td>
+          <td>0.666686</td>
+          <td>0.247768</td>
+          <td>-0.731746</td>
+          <td>-1.533164</td>
         </tr>
         <tr>
           <th>2020-01-03</th>
-          <td>-0.884604</td>
-          <td>-1.419526</td>
-          <td>-0.453942</td>
-          <td>0.084406</td>
-          <td>-2.134206</td>
-          <td>-2.763041</td>
-          <td>-0.947888</td>
-          <td>0.869361</td>
+          <td>1.750348</td>
+          <td>-1.179157</td>
+          <td>0.297452</td>
+          <td>-0.330911</td>
+          <td>0.561260</td>
+          <td>-1.913553</td>
+          <td>-1.038617</td>
+          <td>1.225970</td>
         </tr>
         <tr>
           <th>2020-01-04</th>
-          <td>1.921669</td>
-          <td>0.710321</td>
-          <td>0.897249</td>
-          <td>-0.824313</td>
-          <td>-1.619085</td>
-          <td>-1.628924</td>
-          <td>0.689769</td>
-          <td>1.164203</td>
+          <td>-0.285845</td>
+          <td>-0.112369</td>
+          <td>0.963262</td>
+          <td>-0.920508</td>
+          <td>-0.764545</td>
+          <td>-1.584214</td>
+          <td>1.700780</td>
+          <td>1.784885</td>
         </tr>
         <tr>
           <th>2020-01-05</th>
-          <td>-1.471776</td>
-          <td>1.414213</td>
-          <td>0.524960</td>
-          <td>0.222142</td>
-          <td>-0.357914</td>
-          <td>-0.737719</td>
-          <td>1.117398</td>
-          <td>-0.230982</td>
+          <td>-0.799624</td>
+          <td>0.178560</td>
+          <td>-0.372569</td>
+          <td>1.073806</td>
+          <td>-0.080562</td>
+          <td>0.912078</td>
+          <td>-0.020078</td>
+          <td>1.247597</td>
         </tr>
         <tr>
           <th>2020-01-06</th>
-          <td>-1.883648</td>
-          <td>0.171647</td>
-          <td>-0.306301</td>
-          <td>-0.784412</td>
-          <td>0.902593</td>
-          <td>0.363705</td>
-          <td>-1.333352</td>
-          <td>-1.184695</td>
+          <td>-0.610837</td>
+          <td>-0.713660</td>
+          <td>-1.517435</td>
+          <td>-0.543449</td>
+          <td>0.364877</td>
+          <td>-0.295398</td>
+          <td>0.077122</td>
+          <td>-1.658979</td>
         </tr>
       </tbody>
     </table>
@@ -7082,87 +6990,87 @@ concat
       <tbody>
         <tr>
           <th>2020-01-01</th>
-          <td>0.494922</td>
-          <td>-0.224030</td>
-          <td>-0.746029</td>
-          <td>-0.247138</td>
+          <td>-0.111651</td>
+          <td>-0.223500</td>
+          <td>-1.623665</td>
+          <td>0.438040</td>
         </tr>
         <tr>
           <th>2020-01-02</th>
-          <td>-0.251526</td>
-          <td>-0.659848</td>
-          <td>-0.640088</td>
-          <td>-0.796820</td>
+          <td>0.569454</td>
+          <td>-1.054826</td>
+          <td>1.166425</td>
+          <td>-0.906784</td>
         </tr>
         <tr>
           <th>2020-01-03</th>
-          <td>-0.884604</td>
-          <td>-1.419526</td>
-          <td>-0.453942</td>
-          <td>0.084406</td>
+          <td>1.750348</td>
+          <td>-1.179157</td>
+          <td>0.297452</td>
+          <td>-0.330911</td>
         </tr>
         <tr>
           <th>2020-01-04</th>
-          <td>1.921669</td>
-          <td>0.710321</td>
-          <td>0.897249</td>
-          <td>-0.824313</td>
+          <td>-0.285845</td>
+          <td>-0.112369</td>
+          <td>0.963262</td>
+          <td>-0.920508</td>
         </tr>
         <tr>
           <th>2020-01-05</th>
-          <td>-1.471776</td>
-          <td>1.414213</td>
-          <td>0.524960</td>
-          <td>0.222142</td>
+          <td>-0.799624</td>
+          <td>0.178560</td>
+          <td>-0.372569</td>
+          <td>1.073806</td>
         </tr>
         <tr>
           <th>2020-01-06</th>
-          <td>-1.883648</td>
-          <td>0.171647</td>
-          <td>-0.306301</td>
-          <td>-0.784412</td>
+          <td>-0.610837</td>
+          <td>-0.713660</td>
+          <td>-1.517435</td>
+          <td>-0.543449</td>
         </tr>
         <tr>
           <th>2020-01-01</th>
-          <td>0.476238</td>
-          <td>1.613003</td>
-          <td>-1.026390</td>
-          <td>-1.501116</td>
+          <td>0.010144</td>
+          <td>0.588250</td>
+          <td>1.253550</td>
+          <td>0.637502</td>
         </tr>
         <tr>
           <th>2020-01-02</th>
-          <td>-0.684580</td>
-          <td>-2.065137</td>
-          <td>0.325007</td>
-          <td>-1.586730</td>
+          <td>0.666686</td>
+          <td>0.247768</td>
+          <td>-0.731746</td>
+          <td>-1.533164</td>
         </tr>
         <tr>
           <th>2020-01-03</th>
-          <td>-2.134206</td>
-          <td>-2.763041</td>
-          <td>-0.947888</td>
-          <td>0.869361</td>
+          <td>0.561260</td>
+          <td>-1.913553</td>
+          <td>-1.038617</td>
+          <td>1.225970</td>
         </tr>
         <tr>
           <th>2020-01-04</th>
-          <td>-1.619085</td>
-          <td>-1.628924</td>
-          <td>0.689769</td>
-          <td>1.164203</td>
+          <td>-0.764545</td>
+          <td>-1.584214</td>
+          <td>1.700780</td>
+          <td>1.784885</td>
         </tr>
         <tr>
           <th>2020-01-05</th>
-          <td>-0.357914</td>
-          <td>-0.737719</td>
-          <td>1.117398</td>
-          <td>-0.230982</td>
+          <td>-0.080562</td>
+          <td>0.912078</td>
+          <td>-0.020078</td>
+          <td>1.247597</td>
         </tr>
         <tr>
           <th>2020-01-06</th>
-          <td>0.902593</td>
-          <td>0.363705</td>
-          <td>-1.333352</td>
-          <td>-1.184695</td>
+          <td>0.364877</td>
+          <td>-0.295398</td>
+          <td>0.077122</td>
+          <td>-1.658979</td>
         </tr>
       </tbody>
     </table>
@@ -7211,69 +7119,69 @@ concat
       <tbody>
         <tr>
           <th>2020-01-01</th>
-          <td>0.494922</td>
-          <td>-0.224030</td>
-          <td>-0.746029</td>
-          <td>-0.247138</td>
-          <td>0.476238</td>
-          <td>1.613003</td>
-          <td>-1.026390</td>
-          <td>-1.501116</td>
+          <td>-0.111651</td>
+          <td>-0.223500</td>
+          <td>-1.623665</td>
+          <td>0.438040</td>
+          <td>0.010144</td>
+          <td>0.588250</td>
+          <td>1.253550</td>
+          <td>0.637502</td>
         </tr>
         <tr>
           <th>2020-01-02</th>
-          <td>-0.251526</td>
-          <td>-0.659848</td>
-          <td>-0.640088</td>
-          <td>-0.796820</td>
-          <td>-0.684580</td>
-          <td>-2.065137</td>
-          <td>0.325007</td>
-          <td>-1.586730</td>
+          <td>0.569454</td>
+          <td>-1.054826</td>
+          <td>1.166425</td>
+          <td>-0.906784</td>
+          <td>0.666686</td>
+          <td>0.247768</td>
+          <td>-0.731746</td>
+          <td>-1.533164</td>
         </tr>
         <tr>
           <th>2020-01-03</th>
-          <td>-0.884604</td>
-          <td>-1.419526</td>
-          <td>-0.453942</td>
-          <td>0.084406</td>
-          <td>-2.134206</td>
-          <td>-2.763041</td>
-          <td>-0.947888</td>
-          <td>0.869361</td>
+          <td>1.750348</td>
+          <td>-1.179157</td>
+          <td>0.297452</td>
+          <td>-0.330911</td>
+          <td>0.561260</td>
+          <td>-1.913553</td>
+          <td>-1.038617</td>
+          <td>1.225970</td>
         </tr>
         <tr>
           <th>2020-01-04</th>
-          <td>1.921669</td>
-          <td>0.710321</td>
-          <td>0.897249</td>
-          <td>-0.824313</td>
-          <td>-1.619085</td>
-          <td>-1.628924</td>
-          <td>0.689769</td>
-          <td>1.164203</td>
+          <td>-0.285845</td>
+          <td>-0.112369</td>
+          <td>0.963262</td>
+          <td>-0.920508</td>
+          <td>-0.764545</td>
+          <td>-1.584214</td>
+          <td>1.700780</td>
+          <td>1.784885</td>
         </tr>
         <tr>
           <th>2020-01-05</th>
-          <td>-1.471776</td>
-          <td>1.414213</td>
-          <td>0.524960</td>
-          <td>0.222142</td>
-          <td>-0.357914</td>
-          <td>-0.737719</td>
-          <td>1.117398</td>
-          <td>-0.230982</td>
+          <td>-0.799624</td>
+          <td>0.178560</td>
+          <td>-0.372569</td>
+          <td>1.073806</td>
+          <td>-0.080562</td>
+          <td>0.912078</td>
+          <td>-0.020078</td>
+          <td>1.247597</td>
         </tr>
         <tr>
           <th>2020-01-06</th>
-          <td>-1.883648</td>
-          <td>0.171647</td>
-          <td>-0.306301</td>
-          <td>-0.784412</td>
-          <td>0.902593</td>
-          <td>0.363705</td>
-          <td>-1.333352</td>
-          <td>-1.184695</td>
+          <td>-0.610837</td>
+          <td>-0.713660</td>
+          <td>-1.517435</td>
+          <td>-0.543449</td>
+          <td>0.364877</td>
+          <td>-0.295398</td>
+          <td>0.077122</td>
+          <td>-1.658979</td>
         </tr>
       </tbody>
     </table>
@@ -8473,7 +8381,7 @@ merge
 
 
 
-.. image:: output_199_1.png
+.. image:: output_198_1.png
 
 
 .. code:: ipython3
@@ -8584,7 +8492,7 @@ merge
 
 
 
-.. image:: output_201_1.png
+.. image:: output_200_1.png
 
 
 .. code:: ipython3
@@ -8624,44 +8532,44 @@ merge
       </thead>
       <tbody>
         <tr>
-          <th>100</th>
-          <td>6.0</td>
-          <td>2.5</td>
-          <td>6.3</td>
-          <td>3.3</td>
+          <th>140</th>
+          <td>5.6</td>
+          <td>2.4</td>
+          <td>6.7</td>
+          <td>3.1</td>
           <td>virginica</td>
         </tr>
         <tr>
-          <th>142</th>
+          <th>133</th>
           <td>5.1</td>
+          <td>1.5</td>
+          <td>6.3</td>
+          <td>2.8</td>
+          <td>virginica</td>
+        </tr>
+        <tr>
+          <th>3</th>
+          <td>1.5</td>
+          <td>0.2</td>
+          <td>4.6</td>
+          <td>3.1</td>
+          <td>setosa</td>
+        </tr>
+        <tr>
+          <th>111</th>
+          <td>5.3</td>
           <td>1.9</td>
-          <td>5.8</td>
+          <td>6.4</td>
           <td>2.7</td>
           <td>virginica</td>
         </tr>
         <tr>
-          <th>64</th>
-          <td>3.6</td>
-          <td>1.3</td>
-          <td>5.6</td>
-          <td>2.9</td>
+          <th>85</th>
+          <td>4.5</td>
+          <td>1.6</td>
+          <td>6.0</td>
+          <td>3.4</td>
           <td>versicolor</td>
-        </tr>
-        <tr>
-          <th>8</th>
-          <td>1.4</td>
-          <td>0.2</td>
-          <td>4.4</td>
-          <td>2.9</td>
-          <td>setosa</td>
-        </tr>
-        <tr>
-          <th>1</th>
-          <td>1.4</td>
-          <td>0.2</td>
-          <td>4.9</td>
-          <td>3.0</td>
-          <td>setosa</td>
         </tr>
       </tbody>
     </table>
@@ -8684,7 +8592,7 @@ merge
 
 
 
-.. image:: output_203_1.png
+.. image:: output_202_1.png
 
 
 使用另一个 DataFrame 来更新数据
@@ -9091,4 +8999,3 @@ Cheat Sheet
 
 -  pandas 英文最新文档
    https://pandas.pydata.org/pandas-docs/stable/pandas.pdf
-

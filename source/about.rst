@@ -39,14 +39,14 @@ Configuration
 To configure your Sphinx project for Markdown support, proceed as follows:
 
 
-#. Install the Markdown parser *MyST-Parser*::
+#. Install the Markdown parser *MyST-Parser*:
 
 .. code:: Bash
     
     pip install --upgrade myst-parser
 
 
-#. Add *myst_parser* to the `extensions` configuration option::
+#. Add *myst_parser* to the `extensions` configuration option:
 
 .. code:: Python
 
@@ -58,9 +58,10 @@ To configure your Sphinx project for Markdown support, proceed as follows:
 #. If you want to use Markdown files with extensions other than ``.md``, adjust
    the `source_suffix` variable.  The following example configures
    Sphinx to parse all files with the extensions ``.md`` and ``.txt`` as
-   Markdown::
+   Markdown:
 
 .. code:: Python
+
     source_suffix = {
         '.rst': 'restructuredtext',
         '.txt': 'markdown',
@@ -150,3 +151,42 @@ requirements.txt
     pip freeze > requirements.txt
     pip install -r path\to\requirements.txt
     pip install -i https://pypi.doubanio.com/simple -r path\to\requirements.txt
+
+
+readthedocs
+=====================
+
+Read the Docs supports configuring your documentation builds with a YAML file.
+The configuration file must be in the root directory of your project and be named `.readthedocs.yaml`.
+For example::
+
+    # .readthedocs.yaml
+    # should be put in the root of
+    # Read the Docs configuration file
+    # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
+
+    # Required
+    version: 2
+
+    # Set the version of Python and other tools you might need
+    build:
+    os: ubuntu-20.04
+    tools:
+        python: "3.9"
+        # You can also specify other tool versions:
+        # nodejs: "16"
+        # rust: "1.55"
+        # golang: "1.17"
+
+    # Build documentation in the docs/ directory with Sphinx
+    sphinx:
+    configuration: docs/conf.py
+
+    # If using Sphinx, optionally build your docs in additional formats such as PDF
+    # formats:
+    #    - pdf
+
+    # Optionally declare the Python requirements required to build your docs
+    python:
+    install:
+    - requirements: docs/requirements.txt
