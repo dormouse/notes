@@ -7,15 +7,16 @@ About
 
 .. code:: Bash
 
-   conda create -n note Sphinx
-   conda activate note
-   pip install --upgrade myst-parser
-   pip install pydata-sphinx-theme
-   pip install sphinx-autobuild
+    conda create -n note Sphinx
+    conda activate note
+    pip install --upgrade myst-parser
+    pip install pydata-sphinx-theme
+    pip install sphinx-autobuild
 
 .. highlight:: python
 
 .. _howto-sphinx-markdown:
+
 
 How to Use Markdown
 ===================
@@ -40,32 +41,38 @@ To configure your Sphinx project for Markdown support, proceed as follows:
 
 #. Install the Markdown parser *MyST-Parser*::
 
-      pip install --upgrade myst-parser
+.. code:: Bash
+    
+    pip install --upgrade myst-parser
 
 
 #. Add *myst_parser* to the `extensions` configuration option::
 
-      extensions = ['myst_parser']
+.. code:: Python
 
-   .. note::
-      MyST-Parser requires Sphinx 2.1 or newer.
+    extensions = ['myst_parser']
+
+.. note::
+    MyST-Parser requires Sphinx 2.1 or newer.
 
 #. If you want to use Markdown files with extensions other than ``.md``, adjust
    the `source_suffix` variable.  The following example configures
    Sphinx to parse all files with the extensions ``.md`` and ``.txt`` as
    Markdown::
 
-      source_suffix = {
-          '.rst': 'restructuredtext',
-          '.txt': 'markdown',
-          '.md': 'markdown',
-      }
+.. code:: Python
+    source_suffix = {
+        '.rst': 'restructuredtext',
+        '.txt': 'markdown',
+        '.md': 'markdown',
+    }
 
 #. You can further configure *MyST-Parser* to allow custom syntax that
    standard *CommonMark* doesn't support.  Read more in the `MyST-Parser
    documentation`__.
 
 __ https://myst-parser.readthedocs.io/en/latest/using/syntax-optional.html
+
 
 pydata-sphinx-theme
 ====================
@@ -84,6 +91,7 @@ The theme is available on PyPI and conda-forge. You can install and use as follo
 #. Then, in the conf.py of your sphinx docs, you update the html_theme configuration option::
 
     html_theme = "pydata_sphinx_theme"
+
 
 sphinx-autobuild
 ===================
@@ -124,5 +132,21 @@ add the following to the end of the Makefile:
 
 .. code:: Bash
 
-   livehtml:
-      sphinx-autobuild "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+    live:
+        sphinx-autobuild "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+Then use command to make live documentation:
+
+.. code:: Bash
+
+    make live
+
+
+requirements.txt
+====================
+
+.. code:: Bash
+
+    pip freeze > requirements.txt
+    pip install -r path\to\requirements.txt
+    pip install -i https://pypi.doubanio.com/simple -r path\to\requirements.txt
