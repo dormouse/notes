@@ -190,3 +190,43 @@ For example::
     python:
     install:
     - requirements: docs/requirements.txt
+
+
+Jupyter Notebook Tools for Sphinx
+=====================================
+
+
+nbsphinx is a Sphinx extension that provides a source parser for `*.ipynb` files.
+Custom Sphinx directives are used to show Jupyter Notebook code cells (and of course their results)
+in both HTML and LaTeX output. Un-evaluated notebooks – i.e. notebooks without stored output
+cells – will be automatically executed during the Sphinx build process.
+
+Quick Start:
+
+#. Install nbsphinx
+
+#. Edit your conf.py and add 'nbsphinx' to extensions::
+
+    extensions = [
+        'nbsphinx',
+    ]
+
+#. Edit your index.rst and add the names of your `*.ipynb` files to the toctree.
+
+#. Run Sphinx!
+
+Online documentation (and example of use): https://nbsphinx.readthedocs.io/
+
+Source code repository (and issue tracker): https://github.com/spatialaudio/nbsphinx/
+
+
+Issue
+-----
+
+There is a issue:No Pygments lexer found for "ipython3".
+
+see: https://github.com/jupyter/nbconvert/issues/528
+
+Why: the ipython in conda is not work.
+
+How to fix: use `pip` install ipython in venv of the projcet.

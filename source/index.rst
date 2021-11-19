@@ -11,6 +11,7 @@ Welcome to Dormouse Notes's documentation!
 
    writing/index.rst
    pandas/index.rst
+   bean/index.rst
    about.rst
 
 
