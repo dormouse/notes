@@ -12,6 +12,7 @@ About
     pip install --upgrade myst-parser
     pip install pydata-sphinx-theme
     pip install sphinx-autobuild
+    pip install nbsphinx
 
 .. highlight:: python
 
