@@ -9,6 +9,7 @@ Welcome to Dormouse Notes's documentation!
    :maxdepth: 1
    :caption: You will forget it.
 
+   python/index.rst
    writing/index.rst
    pandas/index.rst
    bean/index.rst
