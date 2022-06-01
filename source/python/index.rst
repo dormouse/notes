@@ -6,7 +6,7 @@ Python
 
    100file
    200list.ipynb
-   300dict
+   300dict.ipynb
    400str
    500datetime
    600functional_programming
