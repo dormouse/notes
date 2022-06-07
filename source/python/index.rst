@@ -10,7 +10,7 @@ Python
    400str
    500datetime
    600functional_programming
-   700sorting
+   700sorting.ipynb
    800logger
    900other
 
