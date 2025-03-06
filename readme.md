@@ -1,8 +1,7 @@
----
-title: About
----
+# title: About
 
-本文档的生成方法:
+This is documents of Dormouse Young. It is made by sphinx, jupyter
+notebook mainly. How to generate this document:
 
 ``` {.Bash}
 conda create -n note Sphinx
@@ -13,8 +12,8 @@ pip install sphinx-autobuild
 pip install nbsphinx
 ```
 
-How to Use Markdown {#howto-sphinx-markdown}
-===================
+
+## How to Use Markdown
 
 [Markdown](https://daringfireball.net/projects/markdown/) is a
 lightweight markup language with a simplistic plain text formatting
@@ -26,8 +25,8 @@ MyST-Parser is a Docutils bridge to
 Python package for parsing the [CommonMark](https://commonmark.org/)
 Markdown flavor.
 
-Configuration
--------------
+
+### Configuration
 
 To configure your Sphinx project for Markdown support, proceed as
 follows:
@@ -71,8 +70,8 @@ source_suffix = {
     [MyST-Parser
     documentation](https://myst-parser.readthedocs.io/en/latest/using/syntax-optional.html).
 
-pydata-sphinx-theme
-===================
+
+## pydata-sphinx-theme
 
 Home Page: <https://github.com/pydata/pydata-sphinx-theme>
 
@@ -94,16 +93,16 @@ as follows:
     html_theme = "pydata_sphinx_theme"
     ```
 
-sphinx-autobuild
-================
+
+## sphinx-autobuild
 
 Homepage: <https://github.com/executablebooks/sphinx-autobuild>
 
 Rebuild Sphinx documentation on changes, with live-reload in the
 browser.
 
-Installation
-------------
+
+### Installation
 
 sphinx-autobuild is available on PyPI. It can be installed using pip:
 
@@ -111,8 +110,8 @@ sphinx-autobuild is available on PyPI. It can be installed using pip:
 pip install sphinx-autobuild
 ```
 
-Usage
------
+
+### Usage
 
 To build a classical Sphinx documentation set, run:
 
@@ -143,8 +142,8 @@ Then use command to make live documentation:
 make live
 ```
 
-requirements.txt
-================
+
+## requirements.txt
 
 ``` {.Bash}
 pip freeze > requirements.txt
@@ -152,8 +151,8 @@ pip install -r path\to\requirements.txt
 pip install -i https://pypi.doubanio.com/simple -r path\to\requirements.txt
 ```
 
-readthedocs
-===========
+
+## readthedocs
 
 Read the Docs supports configuring your documentation builds with a YAML
 file. The configuration file must be in the root directory of your
@@ -192,8 +191,8 @@ install:
 - requirements: docs/requirements.txt
 ```
 
-Jupyter Notebook Tools for Sphinx
-=================================
+
+## Jupyter Notebook Tools for Sphinx
 
 nbsphinx is a Sphinx extension that provides a source parser for
 [\*.ipynb]{.title-ref} files. Custom Sphinx directives are used to show
@@ -225,8 +224,8 @@ Online documentation (and example of use):
 Source code repository (and issue tracker):
 <https://github.com/spatialaudio/nbsphinx/>
 
-Issue
------
+
+### Issue
 
 There is a issue:No Pygments lexer found for \"ipython3\".
 
