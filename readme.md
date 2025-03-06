@@ -13,7 +13,7 @@ pip install nbsphinx
 ```
 
 
-## How to Use Markdown
+## How to Use Markdown in Sphinx
 
 [Markdown](https://daringfireball.net/projects/markdown/) is a
 lightweight markup language with a simplistic plain text formatting
@@ -37,23 +37,17 @@ follows:
 pip install --upgrade myst-parser
 ```
 
-1.  Add *myst\_parser* to the [extensions]{.title-ref} configuration
+1.  Add *myst\_parser* to the `extensions` configuration
     option:
 
 ``` {.Python}
 extensions = ['myst_parser']
 ```
 
-::: {.note}
-::: {.title}
-Note
-:::
-
-MyST-Parser requires Sphinx 2.1 or newer.
-:::
+Note: MyST-Parser requires Sphinx 2.1 or newer.
 
 1.  If you want to use Markdown files with extensions other than `.md`,
-    adjust the [source\_suffix]{.title-ref} variable. The following
+    adjust the `source\_suffix` variable. The following
     example configures Sphinx to parse all files with the extensions
     `.md` and `.txt` as Markdown:
 
@@ -152,11 +146,11 @@ pip install -i https://pypi.doubanio.com/simple -r path\to\requirements.txt
 ```
 
 
-## readthedocs
+## How to show documents on readthedocs site:
 
 Read the Docs supports configuring your documentation builds with a YAML
 file. The configuration file must be in the root directory of your
-project and be named [.readthedocs.yaml]{.title-ref}. For example:
+project and be named `.readthedocs.yaml`. For example:
 
 ``` {.python}
 # .readthedocs.yaml
@@ -195,7 +189,7 @@ install:
 ## Jupyter Notebook Tools for Sphinx
 
 nbsphinx is a Sphinx extension that provides a source parser for
-[\*.ipynb]{.title-ref} files. Custom Sphinx directives are used to show
+`\*.ipynb` files. Custom Sphinx directives are used to show
 Jupyter Notebook code cells (and of course their results) in both HTML
 and LaTeX output. Un-evaluated notebooks -- i.e. notebooks without
 stored output cells -- will be automatically executed during the Sphinx
@@ -213,7 +207,7 @@ Quick Start:
     ]
     ```
 
-3.  Edit your index.rst and add the names of your [\*.ipynb]{.title-ref}
+3.  Edit your index.rst and add the names of your `\*.ipynb`
     files to the toctree.
 
 4.  Run Sphinx!
@@ -225,7 +219,7 @@ Source code repository (and issue tracker):
 <https://github.com/spatialaudio/nbsphinx/>
 
 
-### Issue
+### Issue about Ipython
 
 There is a issue:No Pygments lexer found for \"ipython3\".
 
@@ -233,5 +227,4 @@ see: <https://github.com/jupyter/nbconvert/issues/528>
 
 Why: the ipython in conda is not work.
 
-How to fix: use [pip]{.title-ref} install ipython in venv of the
-projcet.
+How to fix: use `pip` install ipython in venv of the projcet.
